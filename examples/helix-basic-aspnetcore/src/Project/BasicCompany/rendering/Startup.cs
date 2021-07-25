@@ -19,6 +19,7 @@ using BasicCompany.Feature.Navigation.Extensions;
 using BasicCompany.Project.BasicCompany.Rendering.Configuration;
 using BasicCompany.Feature.Products.Extensions;
 using Sitecore.LayoutService.Client;
+using ProxyKit;
 
 namespace BasicCompany.Project.BasicCompany.Rendering
 {
@@ -139,6 +140,14 @@ namespace BasicCompany.Project.BasicCompany.Rendering
 
             // Enable proxying of Sitecore robot detection scripts
             app.UseSitecoreVisitorIdentification();
+
+            app.MapWhen(context => context.Request.Path.StartsWithSegments("/assets"), app =>
+            {
+                app.RunProxy(context => context
+                    .ForwardTo(Configuration.InstanceUri)
+                    .CopyXForwardedHeaders()
+                    .Send());
+            });
 
             app.UseEndpoints(endpoints =>
             {
