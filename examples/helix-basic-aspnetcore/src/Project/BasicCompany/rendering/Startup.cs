@@ -18,6 +18,7 @@ using BasicCompany.Feature.BasicContent.Extensions;
 using BasicCompany.Feature.Navigation.Extensions;
 using BasicCompany.Project.BasicCompany.Rendering.Configuration;
 using BasicCompany.Feature.Products.Extensions;
+using Sitecore.LayoutService.Client;
 
 namespace BasicCompany.Project.BasicCompany.Rendering
 {
@@ -45,7 +46,9 @@ namespace BasicCompany.Project.BasicCompany.Rendering
                 .AddLocalization(options => options.ResourcesPath = "Resources")
                 .AddMvc()
                 // At this time the Layout Service Client requires Json.NET due to limitations in System.Text.Json.
-                .AddNewtonsoftJson(o => o.SerializerSettings.SetDefaults());
+                .AddNewtonsoftJson(
+                    o => o.SerializerSettings.SetDefaults().WithExtensions()
+                );
 
             // Register the Sitecore Layout Service Client, which will be invoked by the Sitecore Rendering Engine.
             services.AddSitecoreLayoutService()
@@ -58,6 +61,9 @@ namespace BasicCompany.Project.BasicCompany.Rendering
                 })
                 .AddHttpHandler("default", Configuration.LayoutServiceUri)
                 .AsDefaultHandler();
+
+            // replace default serializer
+            services.AddSingleton<ISitecoreLayoutSerializer, MyLayoutServiceSerializer>();
 
             // Register the Sitecore Rendering Engine services.
             services.AddSitecoreRenderingEngine(options =>
