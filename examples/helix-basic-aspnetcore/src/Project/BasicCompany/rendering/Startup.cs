@@ -18,6 +18,7 @@ using BasicCompany.Feature.BasicContent.Extensions;
 using BasicCompany.Feature.Navigation.Extensions;
 using BasicCompany.Project.BasicCompany.Rendering.Configuration;
 using BasicCompany.Feature.Products.Extensions;
+using BasicCompany.Feature.ExperienceEdge;
 
 namespace BasicCompany.Project.BasicCompany.Rendering
 {
@@ -56,7 +57,8 @@ namespace BasicCompany.Project.BasicCompany.Rendering
                         .SiteName(Configuration.DefaultSiteName)
                         .ApiKey(Configuration.ApiKey);
                 })
-                .AddHttpHandler("default", Configuration.LayoutServiceUri)
+                //.AddHttpHandler("default", Configuration.LayoutServiceUri)
+                .AddHandler("default", (sp) => ActivatorUtilities.CreateInstance<GraphqlLayoutServiceHandler>(sp))
                 .AsDefaultHandler();
 
             // Register the Sitecore Rendering Engine services.

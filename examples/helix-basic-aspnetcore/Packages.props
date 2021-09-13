@@ -25,5 +25,8 @@
     <PackageReference Update="Microsoft.Extensions.Http" Version="3.1.1" />
     <PackageReference Update="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Update="RichardSzalay.Helix.Publishing.WebRoot" Version="1.5.6" />
+
+    <PackageReference Update="GraphQL.Client" Version="3.2.4" />
+    <PackageReference Update="GraphQL.Client.Serializer.Newtonsoft" Version="3.2.4" />
   </ItemGroup>
 </Project>

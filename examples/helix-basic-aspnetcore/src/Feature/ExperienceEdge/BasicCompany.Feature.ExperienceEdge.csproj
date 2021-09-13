@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Sitecore.LayoutService.Client" />
+    <PackageReference Include="GraphQL.Client" />
+    <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" />
   </ItemGroup>
   
 </Project>
