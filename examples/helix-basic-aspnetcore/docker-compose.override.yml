@@ -39,11 +39,11 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_URLS: "http://*:80"
-      Sitecore__InstanceUri: "http://cd"
+      Sitecore__InstanceUri: "http://cm"
       Sitecore__EnableExperienceEditor: "true"
     depends_on:
       - solution
-      - cd
+      - cm
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.rendering-secure.entrypoints=websecure"
@@ -100,25 +100,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license\license.xml
 
   cd:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xm1-cd:${VERSION:-latest}
-    build:
-      context: ./docker/build/cd
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xm1-cd:${SITECORE_VERSION}
-        HEADLESS_SERVICES_IMAGE: ${SITECORE_MODULE_REGISTRY}sitecore-headless-services-xm1-assets:${HEADLESS_SERVICES_VERSION}
-        TOOLING_IMAGE: ${SITECORE_TOOLS_REGISTRY}sitecore-docker-tools-assets:${TOOLS_VERSION}
-        SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
-    depends_on:
-      - solution
-    volumes:
-      - ${LOCAL_DEPLOY_PATH}\platform:C:\deploy
-      - ${LOCAL_DATA_PATH}\cd:C:\inetpub\wwwroot\App_Data\logs
-      - ${HOST_LICENSE_FOLDER}:C:\license
-    environment:
-      SITECORE_LICENSE_LOCATION: C:\license\license.xml
-      ## Development Environment Optimizations
-      SITECORE_DEVELOPMENT_PATCHES: DevEnvOn,CustomErrorsOff,DebugOn,DiagnosticsOff,InitMessagesOff
-    entrypoint: powershell -Command "& C:\tools\entrypoints\iis\Development.ps1"
+    scale: 0
 
   cm:
     image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xm1-cm:${VERSION:-latest}
@@ -127,6 +109,7 @@ services:
       args:
         BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xm1-cm:${SITECORE_VERSION}
         HEADLESS_SERVICES_IMAGE: ${SITECORE_MODULE_REGISTRY}sitecore-headless-services-xm1-assets:${HEADLESS_SERVICES_VERSION}
+        EDGE_CONNECTOR_IMAGE: ${SITECORE_MODULE_REGISTRY}sitecore-experience-edge-connector-xm1-assets:${HEADLESS_SERVICES_VERSION}
         MANAGEMENT_SERVICES_IMAGE: ${SITECORE_MODULE_REGISTRY}sitecore-management-services-xm1-assets:${MANAGEMENT_SERVICES_VERSION}
         TOOLING_IMAGE: ${SITECORE_TOOLS_REGISTRY}sitecore-docker-tools-assets:${TOOLS_VERSION}
         SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
@@ -142,4 +125,17 @@ services:
       ## Development Environment Optimizations
       SITECORE_DEVELOPMENT_PATCHES: DevEnvOn,CustomErrorsOff,DebugOn,DiagnosticsOff,InitMessagesOff
       Sitecore_AppSettings_exmEnabled:define: "no" # remove to turn on EXM
+      ## Experience Edge Connector
+      Sitecore_ConnectionStrings_ExperienceEdge.Authority: "${XE_AUTHORITY}"
+      Sitecore_ExperienceEdge_CDNUri: "${XE_CDN_URI}"
+      Sitecore_ExperienceEdge_CDNMediaPrefix: "${XE_CDN_MEDIA_PREFIX}"
+      Sitecore_ExperienceEdge_DeliveryEndpoint: "${XE_DELIVERY_ENDPOINT}"
+      Sitecore_ExperienceEdge_SolrCoreName: "${SOLR_CORE_PREFIX_NAME}_master_index"
+      Sitecore_ExperienceEdge_DeliveryEndpoint_CircuitBreakerAttemptsBeforeBreak: "12"
+      Sitecore_ExperienceEdge_DeliveryEndpoint_CircuitBreakerDurationOfBreak: "00:15:00"
+      Sitecore_ExperienceEdge_DeliveryEndpoint_TransientFailureRetryCount: "3"
+      Sitecore_ExperienceEdge_DeliveryEndpoint_TransientFailureSleepTime: "00:00:10"
+      Sitecore_ExperienceEdge_EnableItemLanguageFallback: "false"
+      Sitecore_ExperienceEdge_EnableFieldLanguageFallback: "false"
+      Sitecore_ExperienceEdge_PublishingTargetId: "{8E080626-DDC3-4EF4-A1D1-F0BE4A200254}"
     entrypoint: powershell -Command "& C:\tools\entrypoints\iis\Development.ps1"

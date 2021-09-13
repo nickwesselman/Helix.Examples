@@ -45,7 +45,7 @@ namespace BasicCompany.Feature.Products.LayoutService
                             ShortDescription = product.Serialized[product.Item.Fields[Templates.Product.Fields.ShortDescription].Name],
                             Image = product.Serialized[product.Item.Fields[Templates.Product.Fields.Image].Name]
                         }
-                    })
+                    }).ToList()
             };
         }
     }
