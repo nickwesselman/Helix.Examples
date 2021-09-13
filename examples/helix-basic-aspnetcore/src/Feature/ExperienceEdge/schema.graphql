@@ -1,0 +1,1031 @@
+﻿schema {
+  query: Query
+}
+
+interface Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children(after: ID first: Int hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+interface ItemField {
+  definition: ItemTemplateField
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  name: String!
+  value: String
+}
+
+interface InsertOptions {
+  id(format: String = "N"): ID!
+  name: String!
+}
+
+type Query {
+  item(language: String! path: String): Item
+  layout(language: String! routePath: String! site: String!): LayoutData
+  search("The identifier of the entity to start taking results from." after: String "Max records to return. Must be less than 1000." first: Int = 10 orderBy: ItemSearchOrderByInput where: ItemSearchPredicateInput!): ItemSearchResults
+}
+
+type ItemLanguage {
+  displayName: String!
+  englishName: String!
+  name: String!
+  nativeName: String!
+}
+
+type ItemWorkflow {
+  canEdit: Boolean!
+  canSave: Boolean!
+  workflowId: String
+  workflowName: String
+  workflowState: ItemWorkflowState
+}
+
+type ItemWorkflowState {
+  final: String
+  id: ID
+  name: String
+}
+
+type ItemTemplate implements InsertOptions {
+  baseTemplates: [ItemTemplate]
+  fields: [ItemTemplateField]
+  id(format: String = "N"): ID!
+  name: String!
+  ownFields: [ItemTemplateField]
+}
+
+type ItemTemplateField {
+  id(format: String = "N"): ID!
+  name: String!
+  section: String!
+  sectionSortOrder: Int!
+  shared: Boolean!
+  sortOrder: Int!
+  source: String!
+  title: String!
+  type: String!
+  unversioned: Boolean!
+}
+
+type ItemAccess {
+  canAddBranch(branchId: String): Boolean
+  canAddTemplate(templateId: String): Boolean
+  canAdmin: Boolean
+  canCopyTo(itemId: String): Boolean
+  canCreate: Boolean
+  canDelete: Boolean
+  canDuplicate: Boolean
+  canMoveTo(itemId: String): Boolean
+  canRead: Boolean
+  canReadLanguage: Boolean
+  canRemoveVersion: Boolean
+  canRename: Boolean
+  canWrite: Boolean
+  canWriteLanguague: Boolean
+}
+
+type ItemUrl {
+  hostName: String!
+  path: String!
+  scheme: String!
+  siteName: String!
+  url: String
+}
+
+type TextField implements ItemField {
+  definition: ItemTemplateField
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  name: String!
+  value: String
+}
+
+type CheckboxField implements ItemField {
+  boolValue: Boolean
+  definition: ItemTemplateField
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  name: String!
+  value: String
+}
+
+type DateField implements ItemField {
+  dateValue: Long
+  definition: ItemTemplateField
+  formattedDateValue(format: String = "g" offset: Int = 0): String
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  name: String!
+  value: String
+}
+
+type FileField implements ItemField {
+  definition: ItemTemplateField
+  description: String
+  extension: String
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  keywords: String
+  mimeType: String
+  name: String!
+  size: Int
+  title: String
+  url: String
+  value: String
+}
+
+type ImageField implements ItemField {
+  alt: String
+  definition: ItemTemplateField
+  description: String
+  extension: String
+  height: Int
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  keywords: String
+  mimeType: String
+  name: String!
+  size: Int
+  src(maxHeight: Int maxWidth: Int): String
+  title: String
+  value: String
+  width: Int
+}
+
+type IntegerField implements ItemField {
+  definition: ItemTemplateField
+  id(format: String = "N"): ID!
+  intValue: Int
+  jsonValue: JSON
+  name: String!
+  value: String
+}
+
+type LayoutFieldDevice {
+  device: Item
+  id: String
+  layout: Item
+  layoutId: String
+  renderings: [LayoutFieldRendering]
+}
+
+type LayoutField implements ItemField {
+  definition: ItemTemplateField
+  device: LayoutFieldDevice
+  devices: [LayoutFieldDevice]
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  name: String!
+  value: String
+}
+
+type LayoutFieldRendering {
+  datasource: String
+  datasourceItem: Item
+  id: String
+  parameters: String
+  placeholder: String
+  renderingItem: Item
+}
+
+type LinkField implements ItemField {
+  anchor: String
+  className: String
+  definition: ItemTemplateField
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  linkType: String
+  name: String!
+  queryString: String
+  target: String
+  targetItem: Item
+  text: String
+  url: String!
+  value: String
+}
+
+type LookupField implements ItemField {
+  definition: ItemTemplateField
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  name: String!
+  targetId: ID
+  targetItem: Item
+  value: String
+}
+
+type MultilistField implements ItemField {
+  count: Int
+  definition: ItemTemplateField
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  name: String!
+  targetIds: [String]
+  targetItems: [Item]
+  value: String
+}
+
+type NameValueListField implements ItemField {
+  definition: ItemTemplateField
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  name: String!
+  value: String
+  values: [NameValueListValue]
+}
+
+type NameValueListValue {
+  name: String!
+  value: String!
+}
+
+type NumberField implements ItemField {
+  definition: ItemTemplateField
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  name: String!
+  numberValue: Float
+  value: String
+}
+
+type ItemSearchResults {
+  pageInfo: PageInfo!
+  results: [Item]
+  total: Int!
+}
+
+type LayoutData {
+  item: Item
+}
+
+type RichTextField implements ItemField {
+  definition: ItemTemplateField
+  id(format: String = "N"): ID!
+  jsonValue: JSON
+  name: String!
+  value: String
+}
+
+scalar JSON
+
+interface _NavigationItem {
+  navigationTitle: TextField
+}
+
+interface _NavigationRoot {
+  footerCopyright: TextField
+  headerLogo: ImageField
+}
+
+interface _Product {
+  features: RichTextField
+  image: ImageField
+  price: NumberField
+  relatedProducts: MultilistField
+  shortDescription: TextField
+  title: TextField
+}
+
+interface Caching {
+  cacheable: CheckboxField
+  cacheClearingBehavior: TextField
+  clearOnIndexUpdate: CheckboxField
+  varyByData: CheckboxField
+  varyByDevice: CheckboxField
+  varyByLogin: CheckboxField
+  varyByParm: CheckboxField
+  varyByQueryString: CheckboxField
+  varyByUser: CheckboxField
+}
+
+interface Layout_3a45a72364ee49199d4102fd40fd1466 {
+  area: TextField
+  model: TextField
+  path_a036b2bcba0444f6a75fbae6cd242abf: TextField
+  placeholders: MultilistField
+}
+
+interface RenderingOptions {
+  compatibleRenderings: MultilistField
+  datasourceLocation: TextField
+  datasourceTemplate: TextField
+  editable: CheckboxField
+  enableDatasourceQuery: CheckboxField
+  pageEditorButtons: MultilistField
+  placeholders: MultilistField
+  renderingContentsResolver: LookupField
+}
+
+type AccordionItem implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  content: RichTextField
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  title: TextField
+  url: ItemUrl!
+  version: Int!
+}
+
+type TestimonialFolder implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type AccordionItemFolder implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type C___NavigationItem implements Item & _NavigationItem {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  navigationTitle: TextField
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type C___NavigationRoot implements Item & _NavigationRoot {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  footerCopyright: TextField
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  headerLogo: ImageField
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type C___Product implements Item & _Product {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  features: RichTextField
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  image: ImageField
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  price: NumberField
+  relatedProducts: MultilistField
+  rendered: JSON
+  shortDescription: TextField
+  template: ItemTemplate!
+  title: TextField
+  url: ItemUrl!
+  version: Int!
+}
+
+type C__App implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type C__Page implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type C__StandardTemplate implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type HeroBanner implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  image: ImageField
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  subtitle: TextField
+  template: ItemTemplate!
+  title: TextField
+  url: ItemUrl!
+  version: Int!
+}
+
+type HeroBannerFolder implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type HomePage implements Item & _NavigationItem & _NavigationRoot {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  footerCopyright: TextField
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  headerLogo: ImageField
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  navigationTitle: TextField
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type JavaScriptRendering implements Item & RenderingOptions & Caching {
+  addFieldEditorButton: CheckboxField
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  cacheable: CheckboxField
+  cacheClearingBehavior: TextField
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  clearOnIndexUpdate: CheckboxField
+  clientScriptPath: TextField
+  compatibleRenderings: MultilistField
+  componentName: TextField
+  componentQuery: TextField
+  customizePage: TextField
+  dataSource: TextField
+  datasourceLocation: TextField
+  datasourceTemplate: TextField
+  description: RichTextField
+  displayName: String
+  editable: CheckboxField
+  enableDatasourceQuery: CheckboxField
+  exportedFunctionName: TextField
+  field(name: String!): ItemField
+  fieldEditorFields: MultilistField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  openPropertiesAfterAdd: TextField
+  pageEditorButtons: MultilistField
+  parameters: TextField
+  parametersTemplate: LookupField
+  parent: Item
+  path: String!
+  placeholder: TextField
+  placeholders: MultilistField
+  rendered: JSON
+  renderEngineInstanceConfigurationId: TextField
+  renderEngineType: LookupField
+  renderingContentsResolver: LookupField
+  serverScriptPath: TextField
+  template: ItemTemplate!
+  url: ItemUrl!
+  varyByData: CheckboxField
+  varyByDevice: CheckboxField
+  varyByLogin: CheckboxField
+  varyByParm: CheckboxField
+  varyByQueryString: CheckboxField
+  varyByUser: CheckboxField
+  version: Int!
+}
+
+type JsonRendering implements Item & RenderingOptions & Caching {
+  addFieldEditorButton: CheckboxField
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  cacheable: CheckboxField
+  cacheClearingBehavior: TextField
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  clearOnIndexUpdate: CheckboxField
+  compatibleRenderings: MultilistField
+  componentName: TextField
+  componentQuery: TextField
+  customizePage: TextField
+  dataSource: TextField
+  datasourceLocation: TextField
+  datasourceTemplate: TextField
+  description: RichTextField
+  displayName: String
+  editable: CheckboxField
+  enableDatasourceQuery: CheckboxField
+  field(name: String!): ItemField
+  fieldEditorFields: MultilistField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  openPropertiesAfterAdd: TextField
+  pageEditorButtons: MultilistField
+  parameters: TextField
+  parametersTemplate: LookupField
+  parent: Item
+  path: String!
+  placeholder: TextField
+  placeholders: MultilistField
+  rendered: JSON
+  renderingContentsResolver: LookupField
+  template: ItemTemplate!
+  url: ItemUrl!
+  varyByData: CheckboxField
+  varyByDevice: CheckboxField
+  varyByLogin: CheckboxField
+  varyByParm: CheckboxField
+  varyByQueryString: CheckboxField
+  varyByUser: CheckboxField
+  version: Int!
+}
+
+type JSSLayout implements Item & Layout_3a45a72364ee49199d4102fd40fd1466 {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  area: TextField
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  model: TextField
+  name: String!
+  parent: Item
+  path: String!
+  path_a036b2bcba0444f6a75fbae6cd242abf: TextField
+  placeholders: MultilistField
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type PageComponentFolder implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type ProductDetailPage implements Item & _Product {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  features: RichTextField
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  image: ImageField
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  price: NumberField
+  relatedProducts: MultilistField
+  rendered: JSON
+  shortDescription: TextField
+  template: ItemTemplate!
+  title: TextField
+  url: ItemUrl!
+  version: Int!
+}
+
+type ProductListPage implements Item & _NavigationItem {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  navigationTitle: TextField
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type PromoCard implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  headline: TextField
+  id(format: String = "N"): ID!
+  image: ImageField
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  link: LinkField
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  text: RichTextField
+  url: ItemUrl!
+  version: Int!
+}
+
+type PromoCardFolder implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type RenderEngineType implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  engineTypeName: TextField
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type Route implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type SectionHeader implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  text: TextField
+  url: ItemUrl!
+  version: Int!
+}
+
+type SectionHeaderFolder implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type ServicesPage implements Item & _NavigationItem {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  navigationTitle: TextField
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type Site implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+type Testimonial implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  image: ImageField
+  itemUri: String!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  quote: RichTextField
+  rendered: JSON
+  template: ItemTemplate!
+  title: TextField
+  url: ItemUrl!
+  version: Int!
+}
+
+type UnknownItem implements Item {
+  ancestors(hasLayout: Boolean = false includeTemplateIDs: [String]): [Item]!
+  children("The identifier of the entity to start taking results from." after: ID "Max records to return. Must be less than 1000." first: Int = 10 hasLayout: Boolean = false includeTemplateIDs: [String]): ItemSearchResults
+  displayName: String
+  field(name: String!): ItemField
+  fields(ownFields: Boolean = false): [ItemField]!
+  hasChildren(hasLayout: Boolean = false includeTemplateIDs: [String]): Boolean!
+  id(format: String = "N"): ID!
+  language: ItemLanguage!
+  languages: [Item]!
+  name: String!
+  parent: Item
+  path: String!
+  rendered: JSON
+  template: ItemTemplate!
+  url: ItemUrl!
+  version: Int!
+}
+
+input ItemSearchPredicateInput {
+  AND: [ItemSearchPredicateInput]
+  name: String
+  operator: ItemSearchOperator
+  OR: [ItemSearchPredicateInput]
+  value: String
+}
+
+input ItemSearchOrderByInput {
+  direction: OrderByDirection
+  name: String!
+}
+
+"The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long
+
+type PageInfo {
+  "Contains the encoded value of the cursor pointing to the last hit of a page"
+  endCursor: String
+  "Equals 'true' in case the next page contains results, otherwise 'false'"
+  hasNext: Boolean
+}
+
+"The multiplier path scalar represents a valid GraphQL multiplier path string."
+scalar MultiplierPath
+
+enum OrderByDirection {
+  ASC
+  DESC
+}
+
+enum ItemSearchOperator {
+  EQ
+  CONTAINS
+  NEQ
+  NCONTAINS
+}
+
+"The cost directives is used to express the complexity of a field."
+directive @cost("Defines the complexity of the field." complexity: Int! = 1 "Defines field arguments that act as complexity multipliers." multipliers: [MultiplierPath!]) on FIELD_DEFINITION

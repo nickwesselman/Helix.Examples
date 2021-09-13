@@ -1,0 +1,7 @@
+query LayoutQuery($path: String!, $language: String!, $site: String!) {
+  layout(routePath: $path, language: $language, site: $site) {
+    item {
+      rendered
+    }
+  }
+}

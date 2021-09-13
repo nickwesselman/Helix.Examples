@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>BasicCompany.Feature.ExperienceEdge</AssemblyName>
+    <RootNamespace>BasicCompany.Feature.ExperienceEdge</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Sitecore.LayoutService.Client" />
+    <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" VersionOverride="11.3.7" />
+    <PackageReference Include="StrawberryShake.Transport.Http" VersionOverride="11.3.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+  </ItemGroup>
+  
+</Project>
