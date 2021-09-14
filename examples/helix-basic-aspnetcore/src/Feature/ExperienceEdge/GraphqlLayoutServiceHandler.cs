@@ -17,13 +17,19 @@ namespace BasicCompany.Feature.ExperienceEdge
 {
     public class GraphqlLayoutServiceHandler : Sitecore.LayoutService.Client.ILayoutRequestHandler
     {
+        private readonly Uri _uri;
+        private readonly string _apiKey;
         private readonly ISitecoreLayoutSerializer _serializer;
         private readonly ILogger<GraphqlLayoutServiceHandler> _logger;
 
         public GraphqlLayoutServiceHandler(
+            Uri uri,
+            string apiKey,
             ISitecoreLayoutSerializer serializer,
             ILogger<GraphqlLayoutServiceHandler> logger)
         {
+            _uri = uri;
+            _apiKey = apiKey;
             _serializer = serializer;
             _logger = logger;
         }
@@ -33,8 +39,8 @@ namespace BasicCompany.Feature.ExperienceEdge
             var errors = new List<SitecoreLayoutServiceClientException>();
             SitecoreLayoutResponseContent? content = null;
 
-            var graphqlClient = new GraphQLHttpClient("https://edge-beta.sitecorecloud.io/api/graphql/v1", new NewtonsoftJsonSerializer());
-            graphqlClient.HttpClient.DefaultRequestHeaders.Add("sc_apikey", "TODO: config");
+            var graphqlClient = new GraphQLHttpClient(_uri, new NewtonsoftJsonSerializer());
+            graphqlClient.HttpClient.DefaultRequestHeaders.Add("sc_apikey", _apiKey);
             var layoutRequest = new GraphQLRequest
             {
                 Query = @"

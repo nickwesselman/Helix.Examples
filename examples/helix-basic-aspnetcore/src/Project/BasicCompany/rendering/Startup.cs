@@ -58,7 +58,9 @@ namespace BasicCompany.Project.BasicCompany.Rendering
                         .ApiKey(Configuration.ApiKey);
                 })
                 //.AddHttpHandler("default", Configuration.LayoutServiceUri)
-                .AddHandler("default", (sp) => ActivatorUtilities.CreateInstance<GraphqlLayoutServiceHandler>(sp))
+                .AddHandler("default", (sp) =>
+                    ActivatorUtilities.CreateInstance<GraphqlLayoutServiceHandler>(
+                        sp, Configuration.InstanceUri, Configuration.ApiKey))
                 .AsDefaultHandler();
 
             // Register the Sitecore Rendering Engine services.

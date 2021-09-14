@@ -34,7 +34,7 @@ namespace BasicCompany.Project.BasicCompany.Rendering.Controllers
                     {
                         case ItemNotFoundSitecoreLayoutServiceClientException notFound:
                             Response.StatusCode = (int)HttpStatusCode.NotFound;
-                            return View("NotFound", request.Response.Content.Sitecore.Context);
+                            return View("NotFound", request.Response.Content?.Sitecore?.Context);
                         case InvalidRequestSitecoreLayoutServiceClientException badRequest:
                         case CouldNotContactSitecoreLayoutServiceClientException transportError:
                         case InvalidResponseSitecoreLayoutServiceClientException serverError:
