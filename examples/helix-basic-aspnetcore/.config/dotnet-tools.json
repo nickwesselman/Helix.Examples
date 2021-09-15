@@ -7,12 +7,6 @@
       "commands": [
         "sitecore"
       ]
-    },
-    "strawberryshake.tools": {
-      "version": "11.3.7",
-      "commands": [
-        "dotnet-graphql"
-      ]
     }
   }
 }
