@@ -22,6 +22,7 @@ namespace BasicCompany.Project.BasicCompany.Rendering.Controllers
         // (enables model binding to Sitecore objects such as Route,
         // and causes requests to the Sitecore Layout Service for controller actions)
         [UseSitecoreRendering]
+        [OutputCache(Duration = 84000)]
         public IActionResult Index(Route route)
         {
             var request = HttpContext.GetSitecoreRenderingContext();

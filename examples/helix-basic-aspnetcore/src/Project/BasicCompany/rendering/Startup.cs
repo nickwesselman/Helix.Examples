@@ -48,6 +48,8 @@ namespace BasicCompany.Project.BasicCompany.Rendering
                 // At this time the Layout Service Client requires Json.NET due to limitations in System.Text.Json.
                 .AddNewtonsoftJson(o => o.SerializerSettings.SetDefaults());
 
+            services.AddOutputCaching();
+
             // Register the Sitecore Layout Service Client, which will be invoked by the Sitecore Rendering Engine.
             services.AddSitecoreLayoutService()
                 // Set default parameters for the Layout Service Client from our bound configuration object.
@@ -138,6 +140,7 @@ namespace BasicCompany.Project.BasicCompany.Rendering
             // Enable proxying of Sitecore robot detection scripts
             app.UseSitecoreVisitorIdentification();
 
+            app.UseOutputCaching();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

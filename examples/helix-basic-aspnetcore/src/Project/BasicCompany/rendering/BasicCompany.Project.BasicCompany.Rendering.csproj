@@ -19,6 +19,7 @@
     <PackageReference Include="Sitecore.AspNet.ExperienceEditor" />
     <PackageReference Include="Sitecore.AspNet.Tracking" />
     <PackageReference Include="Sitecore.AspNet.Tracking.VisitorIdentification" />
+    <PackageReference Include="WebEssentials.AspNetCore.OutputCaching" />
   </ItemGroup>
 
   <ItemGroup>
