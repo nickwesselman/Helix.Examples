@@ -21,6 +21,7 @@ namespace BasicCompany.Feature.ExperienceEdge
         private readonly string _apiKey;
         private readonly ISitecoreLayoutSerializer _serializer;
         private readonly ILogger<GraphqlLayoutServiceHandler> _logger;
+        private readonly GraphQLHttpClient _client;
 
         public GraphqlLayoutServiceHandler(
             Uri uri,
@@ -32,15 +33,16 @@ namespace BasicCompany.Feature.ExperienceEdge
             _apiKey = apiKey;
             _serializer = serializer;
             _logger = logger;
+
+            _client = new GraphQLHttpClient(_uri, new NewtonsoftJsonSerializer());
+            _client.HttpClient.DefaultRequestHeaders.Add("sc_apikey", _apiKey);
         }
 
         public async Task<SitecoreLayoutResponse> Request(SitecoreLayoutRequest request, string handlerName)
         {
             var errors = new List<SitecoreLayoutServiceClientException>();
             SitecoreLayoutResponseContent? content = null;
-
-            var graphqlClient = new GraphQLHttpClient(_uri, new NewtonsoftJsonSerializer());
-            graphqlClient.HttpClient.DefaultRequestHeaders.Add("sc_apikey", _apiKey);
+            
             var layoutRequest = new GraphQLRequest
             {
                 Query = @"
@@ -59,7 +61,7 @@ namespace BasicCompany.Feature.ExperienceEdge
                     site = request.SiteName()
                 }
             };
-            var response = await graphqlClient.SendQueryAsync<LayoutQueryResponse>(layoutRequest);
+            var response = await _client.SendQueryAsync<LayoutQueryResponse>(layoutRequest);
             if (_logger.IsEnabled(LogLevel.Debug))
             {
                 _logger.LogDebug($"Layout Service GraphQL Response : {response.Data.Layout}");
